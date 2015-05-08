@@ -1,0 +1,24 @@
+{
+  "ecmaFeatures": {
+    "blockBindings": true,
+    "spread": true,
+    "destructuring": true,
+    "objectLiteralShorthandProperties": true,
+    "objectLiteralShorthandMethods": true,
+    "arrowFunctions": true,
+    "modules": true,
+    "templateStrings": true,
+    "binaryLiterals": true,
+    "octalLiterals": true,
+    "classes": false,
+    "forOf": true
+  },
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "novar": true,
+    "quotes": false,
+    "no-console": false
+  }
+}

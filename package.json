@@ -1,0 +1,47 @@
+{
+  "name": "js-test",
+  "version": "0.0.1",
+  "description": "Minimal test framework",
+  "main": "lib/js-test.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:wmadden/js-test.git"
+  },
+  "authors": [
+    "Will Madden <w.a.madden@gmail.com> (https://github.com/wmadden)"
+  ],
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
+  "scripts": {
+    "start": "npm run build && npm run serve",
+    "prebuild": "npm run -s lint-eslint",
+    "build": "npm run build-js",
+    "watch": "npm run watch-js & npm run watch-js-test & npm run serve",
+    "test": "npm run lint -s && npm run build",
+    "build-js": "browserify --extension=.js lib/js-test.js > build/js-test.js",
+    "build-js-test": "browserify --extension=.js test/tests.js > build/tests.js",
+    "watch-js": "watchify --extension=.js lib/js-test.js -o build/js-test.js --debug --verbose",
+    "watch-js-test": "watchify --extension=.js test/tests.js -o build/tests.js --debug --verbose",
+    "lint-eslint": "eslint lib test",
+    "lint-jscs": "jscs .",
+    "lint": "npm run lint-eslint && npm run lint-jscs",
+    "serve": "browser-sync start --config browser-sync-config.js"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mgonto/react-browserify-spa-seed/issues"
+  },
+  "homepage": "https://github.com/mgonto/react-browserify-spa-seed",
+  "dependencies": {},
+  "devDependencies": {
+    "babelify": "^6.0.2",
+    "browser-sync": "^2.7.1",
+    "browserify": "^10.1.2",
+    "eslint": "^0.20.0",
+    "nodemon": "^1.3.7",
+    "watchify": "^3.2.1"
+  }
+}
