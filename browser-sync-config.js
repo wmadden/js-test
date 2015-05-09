@@ -25,5 +25,5 @@ module.exports = {
     port: 9002,
     "open": false,
     "reloadDebounce": 1000,
-    "host": 'tock.dev'
+    "host": 'js-test.dev'
 };

@@ -1,9 +1,22 @@
-import { declare } from '../lib/js-test';
+import declare from '../lib/js-test';
+import ConsoleLogger from '../lib/ConsoleLogger';
 
-var testRunner = declare(() => {
+/* global describe, beforeEach, afterEach, it */
+let testRunner = declare(() => {
+  describe("when a test doesn't throw an error", () => {
+    beforeEach( () => {
+
+    });
+
+    it("should be considered successful", () => {
+
+    });
+  });
+
+  // describe("when a test")
 
   beforeEach( () => {
-    var a = "do this first";
+    /*eslint no-console:0 */
     console.log("Come on");
   });
 
@@ -13,35 +26,36 @@ var testRunner = declare(() => {
     });
 
     beforeEach( () => {
-      return new Promise( (resolve, reject) => {
+      return new Promise( (resolve) => {
         setTimeout(resolve, 1000);
       });
     });
 
     it('should have stuff from the beforeEach() call', () => {
       this.previouslyDeclaredThing = { some: 'other thing' };
-      if (!this.thing)
+      if (!this.thing) {
         throw new Error("@thing is undefined");
+      }
     });
 
     it('should not have stuff from previous tests', () => {
-      if (this.previouslyDeclaredThing)
-        throw new Error("@previouslyDeclaredThing is still defined")
+      if (this.previouslyDeclaredThing) {
+        throw new Error("@previouslyDeclaredThing is still defined");
+      }
     });
 
     it('should record failures', () => {
-      throw new Error("I'm a broken test")
+      throw new Error("I'm a broken test");
     });
 
     it('should respect async tests', () => {
-      new Promise( (resolve, reject) => {
+      return new Promise( (resolve) => {
         setTimeout(resolve, 5000);
       });
     });
 
     afterEach( () => {} );
   });
-
-});
+}, { in: window });
 
 testRunner(ConsoleLogger()).run();
