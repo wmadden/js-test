@@ -1,4 +1,6 @@
 /*eslint no-console:0 */
+import * as print from './Print';
+
 function assertTestsSucceeded(testContext, parentDescription) {
   let contextDescription = '';
   if (parentDescription) {
@@ -10,9 +12,9 @@ function assertTestsSucceeded(testContext, parentDescription) {
   testContext.tests.forEach( (test) => {
     let testDescription = `${contextDescription} ${test.description}`;
     if (test.result.successful) {
-      console.log(`%c${testDescription} ✓`, "color: green;");
+      print.success(`${testDescription} ✓`);
     } else {
-      console.log(`%c${testDescription} ✗`, "color: red;");
+      print.failure(`${testDescription} ✗`);
       console.log(test.result.error);
     }
   });
@@ -32,9 +34,9 @@ function assertTestsFailed(testContext, parentDescription) {
   testContext.tests.forEach( (test) => {
     let testDescription = `${contextDescription} ${test.description}`;
     if (!test.result.successful) {
-      console.log(`%c${testDescription} ✗ (expected failure)`, "color: green;");
+      print.success(`${testDescription} ✗ (expected failure)`);
     } else {
-      console.log(`%c${testDescription} ✓`, "color: red;");
+      print.failure(`${testDescription} ✓`);
     }
   });
   testContext.childContexts.forEach( (childContext) => {
@@ -42,4 +44,7 @@ function assertTestsFailed(testContext, parentDescription) {
   });
 }
 
-export default { assertTestsSucceeded, assertTestsFailed };
+export default {
+  assertTestsSucceeded,
+  assertTestsFailed,
+};

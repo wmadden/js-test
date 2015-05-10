@@ -1,5 +1,7 @@
 import declare from '../lib/js-test';
 import NoOpLogger from './NoOpLogger';
+import * as print from './Print';
+import { assertTestsSucceeded } from './TestAssertions';
 
 /* global describe, beforeEach, afterEach, it */
 /*eslint no-console:0 */
@@ -17,10 +19,10 @@ function testSuccess() {
     if (!result.childContexts[0].tests[0].result.successful) {
       throw new Error("Test was not successful");
     }
-    console.log("%cSuccess is recorded correctly ✓", "color: green;");
+    print.success("Success is recorded correctly ✓");
   }).catch((error) => {
-    console.error("Success is not recorded correctly ✗");
-    console.log(error);
+    print.failure("Success is not recorded correctly ✗");
+    print.error(error);
   });
 }
 
@@ -40,16 +42,41 @@ function testFailure() {
     )) {
       throw new Error("Test was not successful");
     }
-    console.log("%cFailure is recorded correctly ✓", "color: green;");
+    print.success("Failure is recorded correctly ✓");
   }).catch((error) => {
-    console.error("Failure is not recorded correctly ✗");
-    console.log(error);
+    print.failure("Failure is not recorded correctly ✗");
+    print.error(error);
+  });
+}
+
+function testOrderIndependence() {
+  let testRunner = declare(function() {
+    describe("A test", function() {
+      it('should not have stuff from previous tests', function() {
+        if (this.previouslyDeclaredThing) {
+          throw new Error("this.previouslyDeclaredThing is still defined");
+        }
+        this.previouslyDeclaredThing = true;
+      });
+
+      it('should still not have stuff from previous tests', function() {
+        if (this.previouslyDeclaredThing) {
+          throw new Error("this.previouslyDeclaredThing is still defined");
+        }
+        this.previouslyDeclaredThing = true;
+      });
+    });
+  }, { in: window });
+
+  testRunner(NoOpLogger()).run().then((result) => {
+    assertTestsSucceeded(result);
   });
 }
 
 function testIt() {
   testSuccess();
   testFailure();
+  testOrderIndependence();
 }
 
 export default testIt;

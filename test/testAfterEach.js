@@ -1,6 +1,7 @@
 import declare from '../lib/js-test';
 import NoOpLogger from './NoOpLogger';
 import { assertTestsSucceeded, assertTestsFailed } from './TestAssertions';
+import * as print from './Print';
 
 /*eslint no-console:0 */
 /* global describe, beforeEach, afterEach, it */
@@ -24,9 +25,9 @@ function testAfterEachWorksAtAll() {
   testRunner(NoOpLogger()).run().then((result) => {
     assertTestsSucceeded(result, '');
     if (afterEachRan) {
-      console.log(`%cafterEach() is called ✓`, "color: green;");
+      print.success("afterEach() is called ✓");
     } else {
-      console.log(new Error("afterEach() is not called ✗"));
+      print.failure("afterEach() is not called ✗");
     }
   });
 }
@@ -40,6 +41,12 @@ function testAfterEachWorksInNestedTests() {
       });
 
       describe("and a nested test", function() {
+        afterEach(function() {
+          if (!outerAfterEachRan) {
+            throw new Error("The outer afterEach() hook should have run before the inner one");
+          }
+        });
+
         it("should only call the afterEach() after the test", function() {
           if (outerAfterEachRan) {
             throw new Error("The afterEach() hook should not have run before the test");
@@ -49,12 +56,13 @@ function testAfterEachWorksInNestedTests() {
     });
   }, { in: window });
 
-  testRunner(NoOpLogger()).run().then(function() {
+  testRunner(NoOpLogger()).run().then(function(result) {
     if (outerAfterEachRan) {
-      console.log(`%cafterEach() is called for nested tests ✓`, "color: green;");
+      print.success("afterEach() is called for nested tests ✓");
     } else {
-      console.log(new Error("afterEach() is not called for nested tests ✗"));
+      print.failure("afterEach() is not called for nested tests ✗");
     }
+    assertTestsSucceeded(result);
   });
 }
 
@@ -116,9 +124,9 @@ function testAsyncAfterEach() {
   testRunner(NoOpLogger()).run().then((result) => {
     assertTestsSucceeded(result, '');
     if (afterEachRan) {
-      console.log(`%cTest runner waits for async afterEach()  ✓`, "color: green;");
+      print.success("Test runner waits for async afterEach()  ✓");
     } else {
-      console.log(new Error("Test runner does not wait for async afterEach() ✗"));
+      print.failure("Test runner does not wait for async afterEach() ✗");
     }
   });
 }
@@ -131,13 +139,51 @@ function testAfterEachFailures() {
       });
 
       afterEach(function() {
-        throw new Error("afterEach() throws an error");
+        throw new Error("afterEach() error");
       });
     });
   }, { in: window });
 
   testRunner(NoOpLogger()).run().then((result) => {
-    assertTestsFailed(result, '');
+    let test = result.childContexts[0].tests[0];
+    if (test.result.successful) {
+      print.failure('Faulty afterEach() did not cause the test to fail ✗');
+      return;
+    }
+    if (test.result.error.message !== "afterEach() error") {
+      print.failure('Faulty afterEach() test failed for unexpected reason ✗');
+      print.error(test.result.error);
+      return;
+    }
+    print.success('Faulty afterEach() causes test to fail ✓')
+  });
+}
+
+function testAfterEachFailuresForBrokenTest() {
+  let testRunner = declare(function() {
+    describe("A context with a faulty afterEach() hook", function() {
+      it("should record the test's error", function() {
+        throw new Error("error from test");
+      });
+
+      afterEach(function() {
+        throw new Error("afterEach() error");
+      });
+    });
+  }, { in: window });
+
+  testRunner(NoOpLogger()).run().then((result) => {
+    let test = result.childContexts[0].tests[0];
+    if (test.result.successful) {
+      print.failure('Test did not fail ✗');
+      return;
+    }
+    if (test.result.error.message !== "error from test") {
+      print.failure('Did not receive expected error ✗');
+      print.error(test.result.error);
+      return;
+    }
+    print.success('Should record error from test despite broken afterEach() ✓')
   });
 }
 
@@ -147,6 +193,7 @@ function testAfterEach() {
   testAfterEachSomeMore();
   testAsyncAfterEach();
   testAfterEachFailures();
+  testAfterEachFailuresForBrokenTest();
 }
 
 export default testAfterEach;
