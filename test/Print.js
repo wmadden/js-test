@@ -1,11 +1,15 @@
 /*eslint no-console:0 */
 
+let tests = 0;
+
 function success(message) {
-  console.log(`%c${message}`, "color: green;");
+  tests += 1;
+  console.log(`%c${tests}: ${message}`, "color: green;");
 }
 
 function failure(message) {
-  console.log(`%c${message}`, "color: red;");
+  tests += 1;
+  console.log(`%c${tests}: ${message}`, "color: red;");
 }
 
 function printError(error) {
