@@ -4,7 +4,6 @@ import * as print from './Print';
 import { assertTestsSucceeded } from './TestAssertions';
 
 /* global describe, beforeEach, afterEach, it */
-/*eslint no-console:0 */
 
 function testSuccess() {
   let testRunner = declare(function() {

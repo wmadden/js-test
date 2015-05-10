@@ -1,4 +1,3 @@
-/*eslint no-console:0 */
 import * as print from './Print';
 
 function assertTestsSucceeded(testContext, parentDescription) {
@@ -15,7 +14,7 @@ function assertTestsSucceeded(testContext, parentDescription) {
       print.success(`${testDescription} ✓`);
     } else {
       print.failure(`${testDescription} ✗`);
-      console.log(test.result.error);
+      print.error(test.result.error);
     }
   });
   testContext.childContexts.forEach( (childContext) => {
@@ -46,5 +45,5 @@ function assertTestsFailed(testContext, parentDescription) {
 
 export default {
   assertTestsSucceeded,
-  assertTestsFailed,
+  assertTestsFailed
 };

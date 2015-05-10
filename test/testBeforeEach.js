@@ -1,9 +1,8 @@
 import declare from '../lib/js-test';
 import NoOpLogger from './NoOpLogger';
-import { assertTestsSucceeded, assertTestsFailed } from './TestAssertions';
+import { assertTestsSucceeded } from './TestAssertions';
 import * as print from './Print';
 
-/*eslint no-console:0 */
 /* global describe, beforeEach, afterEach, it */
 
 function testBeforeEachWorks() {
@@ -105,7 +104,7 @@ function testBeforeEachFailures() {
       print.error(test.result.error);
       return;
     }
-    print.success('Faulty beforeEach() causes test to fail ✓')
+    print.success('Faulty beforeEach() causes test to fail ✓');
   });
 }
 

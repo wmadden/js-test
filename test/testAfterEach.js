@@ -1,9 +1,8 @@
 import declare from '../lib/js-test';
 import NoOpLogger from './NoOpLogger';
-import { assertTestsSucceeded, assertTestsFailed } from './TestAssertions';
+import { assertTestsSucceeded } from './TestAssertions';
 import * as print from './Print';
 
-/*eslint no-console:0 */
 /* global describe, beforeEach, afterEach, it */
 
 function testAfterEachWorksAtAll() {
@@ -155,7 +154,7 @@ function testAfterEachFailures() {
       print.error(test.result.error);
       return;
     }
-    print.success('Faulty afterEach() causes test to fail ✓')
+    print.success('Faulty afterEach() causes test to fail ✓');
   });
 }
 
@@ -183,7 +182,7 @@ function testAfterEachFailuresForBrokenTest() {
       print.error(test.result.error);
       return;
     }
-    print.success('Should record error from test despite broken afterEach() ✓')
+    print.success('Should record error from test despite broken afterEach() ✓');
   });
 }
 
