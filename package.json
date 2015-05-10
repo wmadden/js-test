@@ -19,7 +19,7 @@
     "start": "npm run build && npm run serve",
     "prebuild": "npm run -s lint-eslint",
     "build": "npm run build-js",
-    "watch": "npm run watch-js & npm run watch-js-test & npm run serve",
+    "watch": "./node_modules/.bin/parallelshell 'npm run watch-js' 'npm run watch-js-test' 'npm run serve'",
     "test": "npm run lint -s && npm run build",
     "prebuild-js": "npm run -s lint",
     "build-js": "browserify --extension=.js lib/js-test.js > build/js-test.js",
@@ -28,9 +28,7 @@
     "watch-js": "nodemon -q -w lib --ext 'js' --exec 'npm run -s build-js && echo'",
     "watch-js-test": "nodemon -q -w test --ext 'js' --exec 'npm run -s build-js-test && echo'",
     "watch-js-test-old": "watchify --extension=.js test/tests.js -o build/tests.js --debug --verbose",
-    "lint-eslint": "eslint lib test",
-    "lint-jscs": "./node_modules/.bin/jscs .",
-    "lint": "npm run lint-eslint && npm run lint-jscs",
+    "lint": "eslint lib test",
     "serve": "browser-sync start --config browser-sync-config.js"
   },
   "license": "MIT",
@@ -45,6 +43,7 @@
     "browserify": "^10.1.2",
     "eslint": "^0.20.0",
     "nodemon": "^1.3.7",
+    "parallelshell": "^1.1.1",
     "watchify": "^3.2.1"
   }
 }
