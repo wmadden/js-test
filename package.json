@@ -21,12 +21,13 @@
     "build": "npm run build-js",
     "watch": "./node_modules/.bin/parallelshell 'npm run watch-js-test' 'npm run serve'",
     "test": "npm run lint -s && npm run build",
-    "prebuild-js": "npm run -s lint",
+    "prebuild-js-test": "npm run -s lint",
     "build-js": "browserify --extension=.js lib/js-test.js > build/js-test.js",
+
     "build-js-test": "browserify --extension=.js test/tests.js > build/tests.js",
     "watch-js-old": "watchify --extension=.js lib/js-test.js -o build/js-test.js --debug --verbose",
     "watch-js": "nodemon -q -w lib --ext 'js' --exec 'npm run -s build-js && echo'",
-    "watch-js-test": "nodemon -q -w lib -w test --ext 'js' --exec 'npm run -s build-js-test && echo'",
+    "watch-js-test": "nodemon -q -w lib -w test --ext 'js' --exec 'npm run build-js-test && echo'",
     "watch-js-test-old": "watchify --extension=.js test/tests.js -o build/tests.js --debug --verbose",
     "lint": "eslint lib test",
     "serve": "browser-sync start --config browser-sync-config.js"
