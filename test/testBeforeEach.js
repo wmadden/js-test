@@ -114,7 +114,4 @@ function testBeforeEach() {
   testBeforeEachFailures();
 }
 
-
-// TODO: test that outer hooks fire before inner hooks
-
 export default testBeforeEach;
